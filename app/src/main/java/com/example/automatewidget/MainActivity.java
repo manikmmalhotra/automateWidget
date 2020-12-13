@@ -46,6 +46,9 @@ public class MainActivity extends AppCompatActivity {
         String Stats_data = "";
         for(int i = 0; i <= queryUsageStats.size()-1; i++){
             Log.d("manik",queryUsageStats.get(i).toString());
+            if(usageStatsManager.isAppInactive(queryUsageStats.get(i).getPackageName())){
+                Log.d("rujj"," working : "+queryUsageStats.get(i).getPackageName());
+            }
             Stats_data = Stats_data + "Package Name : "+ queryUsageStats.get(i).getPackageName() + "\n" +
                                       "Last Time Used : "+ convertTime(queryUsageStats.get(i).getLastTimeUsed()) + "\n" +
                                       "Describe Content : "+ queryUsageStats.get(i).describeContents() + "\n" +
