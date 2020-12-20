@@ -101,13 +101,13 @@ public class WidgetService extends Service {
                         if (clickDuration<MAX_CLICk_DURATION){
                             Toast.makeText(WidgetService.this, "TIME : "+textView.getText(), Toast.LENGTH_SHORT).show();
                         }else {
-                            if (layoutParams.y>(height*0.6)){
+                            if (layoutParams.y>(height*0.8)){
                                 stopSelf();
                             }
                         }
                         return true;
                     case MotionEvent.ACTION_MOVE:
-                         layoutParams.x = initialX+(int)(initialTouchY-event.getRawX());
+                         layoutParams.x = initialX+(int)(initialTouchX-event.getRawX());
                         layoutParams.y = initialY+(int)(event.getRawY()-initialTouchY);
 
                         windowManager.updateViewLayout(floatingView,layoutParams);
