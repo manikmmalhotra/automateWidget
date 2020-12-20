@@ -8,8 +8,8 @@
         android:layout_centerHorizontal="true">
         <TextView
             android:id="@+id/text_widget"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
+            android:layout_width="120dp"
+            android:layout_height="120dp"
             android:textSize="22dp"
             android:text="heyy"
             android:textStyle="bold"
