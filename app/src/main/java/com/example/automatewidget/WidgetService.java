@@ -44,6 +44,7 @@ public class WidgetService extends Service {
     String currentApp = "";
     int height;
     int widht;
+    int i =0;
     public static List<String> activeApp = new ArrayList<>();
     @Nullable
     @Override
@@ -105,8 +106,17 @@ public class WidgetService extends Service {
                 public void run() {
                     //do stuff like remove view etc
                     // MainActivity.adapter.notifyDataSetChanged();
+
                     if (currentApp.contains("youtube")){
-                        stickyFun();
+                        if(i==0){
+                            i++;
+                            runnig = "hello";
+                            stickyFun();
+
+                        }
+                    }
+                    if (currentApp.contains("spotify")){
+                        stopSelf();
                     }
                 }
             });
@@ -165,7 +175,7 @@ public class WidgetService extends Service {
 
         textView = floatingView.findViewById(R.id.text_widget);
 
-        textView.setText("youtube");
+        textView.setText(runnig);
         Log.d("rujj",runnig+"");
 
 
