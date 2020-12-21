@@ -4,6 +4,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -27,6 +28,7 @@ public class WidgetActivity extends AppCompatActivity {
         buttonAddWidget.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                v.setBackgroundColor(Color.RED);
                 if(!Settings.canDrawOverlays(WidgetActivity.this)){
                         getPermission();
                 }else {
