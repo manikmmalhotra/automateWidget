@@ -47,7 +47,6 @@ public class WidgetService extends Service {
     WindowManager.LayoutParams layoutParams;
     int widht;
     int i =0;
-    public static List<String> activeApp = new ArrayList<>();
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
@@ -89,18 +88,7 @@ public class WidgetService extends Service {
                     currentApp = mySortedMap.get(mySortedMap.lastKey()).getPackageName();
                 }
             }
-            Log.e("manikk", "Current App in foreground is: " + currentApp);
-
-//            if (currentApp == "com.google.android.youtube"){
-//                runnig = "youtube";
-//            }
-//
-//
-//                    if(!runnig==currentApp){
-//                        runnig = currentApp;
-//                    }
-
-
+//            Log.e("manikk", "Current App in foreground is: " + currentApp);
 
 
             new Handler(Looper.getMainLooper()).post(new Runnable() {
@@ -108,51 +96,45 @@ public class WidgetService extends Service {
                 public void run() {
                     //do stuff like remove view etc
                     // MainActivity.adapter.notifyDataSetChanged();
-
-                   // if (i==0) {
-
-                    if (i == 0 || floatingView == null){
+                    Log.e("manikk", "Current App in foreground is: " + currentApp);
 
                         if (currentApp.contains("youtube")) {
+                            Log.e("rohit", "Current App in foreground is: " + currentApp);
                             if (name != "youtube") {
+                                if(floatingView!=null && floatingView.getVisibility()==View.VISIBLE)
+                                {
+                                    floatingView.setVisibility(View.GONE);
+                                }
                                 name = "youtube";
                                 stickyFun();
-
-
                             }
                             Log.d("mnik",""+layoutParams.toString());
 
-                        } else if (currentApp.contains("spotify")) {
-                            if (name != "spotify") {
-                                name = "spotify";
-                                stickyFun();
-
-                            }
-
-                        } else if (currentApp.contains("launcher")) {
-
-                            name="";
-
                         }
-                    }
+                    if (currentApp.contains("whatsapp")) {
+                        Log.e("rohit", "Current App in foreground is: " + currentApp);
+                        if (name != "whatsapp") {
+                            if(floatingView!=null && floatingView.getVisibility()==View.VISIBLE)
+                            {
+                                floatingView.setVisibility(View.GONE);
+                            }
+                            name = "whatsapp";
+                            stickyFun();
+                        }
+                        Log.d("mnik",""+layoutParams.toString());
 
-//                    if (currentApp.contains("launcher")){
-//                        if (i==0){
-//                            runnig = "hello";
-//                            stickyFun();
-//                            i++;
-//                        }
-//                    }
-//                    if (currentApp.contains("automate")){
-//                        stopSelf();
-//
-//                    }
+                    }
+                        if (currentApp.contains("launcher")) {
+                            Log.e("rohit", "Current App in foreground is: " + currentApp);
+                            name = "";
+                            if(floatingView!=null && floatingView.getVisibility()==View.VISIBLE)
+                            {
+                                floatingView.setVisibility(View.GONE);
+                            }
+                        }
+
                 }
             });
-
-
-            activeApp.add(currentApp.toString());
-
 
         }
         else {
@@ -243,6 +225,7 @@ public class WidgetService extends Service {
                                     //stopSelf();
                                     floatingView.setVisibility(View.GONE);
                                     i=0;
+                                    return true;
                                 }
                             }
                             return true;
