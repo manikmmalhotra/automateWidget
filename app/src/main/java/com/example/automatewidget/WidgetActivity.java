@@ -20,6 +20,7 @@ public class WidgetActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_widget);
+        startActivity(new Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS));
 
         buttonAddWidget = findViewById(R.id.button_widget);
 

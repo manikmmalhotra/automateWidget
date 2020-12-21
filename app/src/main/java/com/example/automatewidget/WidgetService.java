@@ -40,13 +40,14 @@ public class WidgetService extends Service {
     WindowManager windowManager;
     ImageView imageClose;
     TextView textView;
-    String runnig ="";
+    String runnig = "";
     String currentApp = "";
-    String name="";
+    String name = "";
     int height;
     WindowManager.LayoutParams layoutParams;
     int widht;
-    int i =0;
+    int i = 0;
+
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
@@ -67,7 +68,7 @@ public class WidgetService extends Service {
                 retriveNewApp();
 
             }
-        },0,1000);
+        }, 0, 1000);
 
         return START_STICKY;
     }
@@ -80,7 +81,7 @@ public class WidgetService extends Service {
             List<UsageStats> applist = usm.queryUsageStats(UsageStatsManager.INTERVAL_DAILY, time - 1000 * 1000, time);
             if (applist != null && applist.size() > 0) {
 
-                SortedMap<Long, UsageStats> mySortedMap = new TreeMap<Long,UsageStats>();
+                SortedMap<Long, UsageStats> mySortedMap = new TreeMap<Long, UsageStats>();
                 for (UsageStats usageStats : applist) {
                     mySortedMap.put(usageStats.getLastTimeUsed(), usageStats);
                 }
@@ -98,49 +99,45 @@ public class WidgetService extends Service {
                     // MainActivity.adapter.notifyDataSetChanged();
                     Log.e("manikk", "Current App in foreground is: " + currentApp);
 
-                        if (currentApp.contains("youtube")) {
-                            Log.e("rohit", "Current App in foreground is: " + currentApp);
-                            if (name != "youtube") {
-                                if(floatingView!=null && floatingView.getVisibility()==View.VISIBLE)
-                                {
-                                    floatingView.setVisibility(View.GONE);
-                                }
-                                name = "youtube";
-                                stickyFun();
+                    if (currentApp.contains("youtube")) {
+                        Log.e("rohit", "Current App in foreground is: " + currentApp);
+                        if (name != "youtube") {
+                            if (floatingView != null && floatingView.getVisibility() == View.VISIBLE) {
+                                floatingView.setVisibility(View.GONE);
                             }
-                            Log.d("mnik",""+layoutParams.toString());
-
+                            name = "youtube";
+                            stickyFun();
                         }
+                        Log.d("mnik", "" + layoutParams.toString());
+
+                    }
                     if (currentApp.contains("whatsapp")) {
                         Log.e("rohit", "Current App in foreground is: " + currentApp);
                         if (name != "whatsapp") {
-                            if(floatingView!=null && floatingView.getVisibility()==View.VISIBLE)
-                            {
+                            if (floatingView != null && floatingView.getVisibility() == View.VISIBLE) {
                                 floatingView.setVisibility(View.GONE);
                             }
                             name = "whatsapp";
                             stickyFun();
                         }
-                        Log.d("mnik",""+layoutParams.toString());
+                        Log.d("mnik", "" + layoutParams.toString());
 
                     }
-                        if (currentApp.contains("launcher")) {
-                            Log.e("rohit", "Current App in foreground is: " + currentApp);
-                            name = "";
-                            if(floatingView!=null && floatingView.getVisibility()==View.VISIBLE)
-                            {
-                                floatingView.setVisibility(View.GONE);
-                            }
+                    if (currentApp.contains("launcher")) {
+                        Log.e("rohit", "Current App in foreground is: " + currentApp);
+                        name = "";
+                        if (floatingView != null && floatingView.getVisibility() == View.VISIBLE) {
+                            floatingView.setVisibility(View.GONE);
                         }
+                    }
 
                 }
             });
 
-        }
-        else {
+        } else {
 
             ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
-            String mm= manager.getRunningTasks(1).get(0).topActivity.getPackageName();
+            String mm = manager.getRunningTasks(1).get(0).topActivity.getPackageName();
             Log.e("manik", "Current App in foreground is: " + mm);
         }
 
@@ -148,99 +145,98 @@ public class WidgetService extends Service {
     }
 
 
-    private void stickyFun(){
+    private void stickyFun() {
         i++;
-        if (Build.VERSION.SDK_INT>=Build.VERSION_CODES.O){
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             LAYOUT_FLAG = WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY;
-        }else {
+        } else {
             LAYOUT_FLAG = WindowManager.LayoutParams.TYPE_PHONE;
         }
 
-            floatingView = LayoutInflater.from(this).inflate(R.layout.layout_widget,null);
+        floatingView = LayoutInflater.from(this).inflate(R.layout.layout_widget, null);
 
-            layoutParams = new WindowManager.LayoutParams(WindowManager.LayoutParams.WRAP_CONTENT,
-                    WindowManager.LayoutParams.WRAP_CONTENT,
-                    LAYOUT_FLAG,
-                    WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
-                    PixelFormat.TRANSLUCENT);
+        layoutParams = new WindowManager.LayoutParams(WindowManager.LayoutParams.WRAP_CONTENT,
+                WindowManager.LayoutParams.WRAP_CONTENT,
+                LAYOUT_FLAG,
+                WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
+                PixelFormat.TRANSLUCENT);
 
-            layoutParams.gravity = Gravity.TOP|Gravity.RIGHT;
-            layoutParams.x = 0;
-            layoutParams.y = 100;
-
-
-
-        WindowManager.LayoutParams imageParams = new WindowManager.LayoutParams(140,140,
-                    LAYOUT_FLAG,
-                    WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
-                    PixelFormat.TRANSLUCENT);
-            imageParams.gravity = Gravity.BOTTOM|Gravity.CENTER;
-            imageParams.y = 100;
-
-            windowManager = (WindowManager) getSystemService((WINDOW_SERVICE));
-            imageClose = new ImageView(this);
-            imageClose.setImageResource(R.drawable.ic_baseline_close_24);
-            imageClose.setVisibility(View.INVISIBLE);
-            windowManager.addView(imageClose,imageParams);
-            windowManager.addView(floatingView,layoutParams);
-            floatingView.setVisibility(View.VISIBLE);
-
-            height = windowManager.getDefaultDisplay().getHeight();
-            widht = windowManager.getDefaultDisplay().getWidth();
-
-            textView = floatingView.findViewById(R.id.text_widget);
-
-            textView.setText(name);
-            Log.d("rujj",runnig+"");
+        layoutParams.gravity = Gravity.TOP | Gravity.RIGHT;
+        layoutParams.x = 0;
+        layoutParams.y = 100;
 
 
-            textView.setOnTouchListener(new View.OnTouchListener() {
-                int initialX,initialY;
-                float initialTouchX,initialTouchY;
-                long startClickTime;
-                int MAX_CLICk_DURATION = 200;
-                @Override
-                public boolean onTouch(View v, MotionEvent event) {
+        WindowManager.LayoutParams imageParams = new WindowManager.LayoutParams(140, 140,
+                LAYOUT_FLAG,
+                WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
+                PixelFormat.TRANSLUCENT);
+        imageParams.gravity = Gravity.BOTTOM | Gravity.CENTER;
+        imageParams.y = 100;
 
-                    switch (event.getAction()){
-                        case MotionEvent.ACTION_DOWN:
-                            startClickTime = Calendar.getInstance().getTimeInMillis();
-                            imageClose.setVisibility(View.VISIBLE);
-                            initialX = layoutParams.x;
-                            initialY = layoutParams.y;
+        windowManager = (WindowManager) getSystemService((WINDOW_SERVICE));
+        imageClose = new ImageView(this);
+        imageClose.setImageResource(R.drawable.ic_baseline_close_24);
+        imageClose.setVisibility(View.INVISIBLE);
+        windowManager.addView(imageClose, imageParams);
+        windowManager.addView(floatingView, layoutParams);
+        floatingView.setVisibility(View.VISIBLE);
 
-                            initialTouchX = event.getRawX();
-                            initialTouchY = event.getRawY();
+        height = windowManager.getDefaultDisplay().getHeight();
+        widht = windowManager.getDefaultDisplay().getWidth();
 
-                            return true;
-                        case MotionEvent.ACTION_UP:
-                            long clickDuration = Calendar.getInstance().getTimeInMillis()-startClickTime;
-                            imageClose.setVisibility(View.GONE);
-                            layoutParams.x = initialX+(int)(initialTouchX-event.getRawX());
-                            layoutParams.y = initialY+(int)(event.getRawY()-initialTouchY);
-                            if (clickDuration<MAX_CLICk_DURATION){
-                                Toast.makeText(WidgetService.this, "TIME : "+textView.getText(), Toast.LENGTH_SHORT).show();
-                            }else {
-                                if (layoutParams.y>(height*0.8)){
-                                    //stopSelf();
-                                    floatingView.setVisibility(View.GONE);
-                                    i=0;
-                                    return true;
-                                }
+        textView = floatingView.findViewById(R.id.text_widget);
+
+        textView.setText(name);
+        Log.d("rujj", runnig + "");
+
+
+        textView.setOnTouchListener(new View.OnTouchListener() {
+            int initialX, initialY;
+            float initialTouchX, initialTouchY;
+            long startClickTime;
+            int MAX_CLICk_DURATION = 200;
+
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        startClickTime = Calendar.getInstance().getTimeInMillis();
+                        imageClose.setVisibility(View.VISIBLE);
+                        initialX = layoutParams.x;
+                        initialY = layoutParams.y;
+
+                        initialTouchX = event.getRawX();
+                        initialTouchY = event.getRawY();
+
+                        return true;
+                    case MotionEvent.ACTION_UP:
+                        long clickDuration = Calendar.getInstance().getTimeInMillis() - startClickTime;
+                        imageClose.setVisibility(View.GONE);
+                        layoutParams.x = initialX + (int) (initialTouchX - event.getRawX());
+                        layoutParams.y = initialY + (int) (event.getRawY() - initialTouchY);
+                        if (clickDuration < MAX_CLICk_DURATION) {
+                            Toast.makeText(WidgetService.this, "TIME : " + textView.getText(), Toast.LENGTH_SHORT).show();
+                        } else {
+                            if (layoutParams.y > (height * 0.8)) {
+                                //stopSelf();
+                                floatingView.setVisibility(View.GONE);
+                                i = 0;
+                                return true;
                             }
-                            return true;
-                        case MotionEvent.ACTION_MOVE:
-                            layoutParams.x = initialX+(int)(initialTouchX-event.getRawX());
-                            layoutParams.y = initialY+(int)(event.getRawY()-initialTouchY);
+                        }
+                        return true;
+                    case MotionEvent.ACTION_MOVE:
+                        layoutParams.x = initialX + (int) (initialTouchX - event.getRawX());
+                        layoutParams.y = initialY + (int) (event.getRawY() - initialTouchY);
 
-                            windowManager.updateViewLayout(floatingView,layoutParams);
+                        windowManager.updateViewLayout(floatingView, layoutParams);
 
-                            return true;
-                    }
-                    return false;
+                        return true;
                 }
-            });
-
+                return false;
+            }
+        });
 
 
     }
@@ -250,11 +246,11 @@ public class WidgetService extends Service {
         stopSelf();
         super.onDestroy();
 
-        if (floatingView!=null){
+        if (floatingView != null) {
             windowManager.removeView(floatingView);
         }
 
-        if(imageClose!=null){
+        if (imageClose != null) {
             windowManager.removeView(imageClose);
         }
     }
