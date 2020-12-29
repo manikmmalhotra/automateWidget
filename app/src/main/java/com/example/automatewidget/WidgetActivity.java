@@ -8,7 +8,10 @@ import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.provider.Settings;
+import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
@@ -16,6 +19,7 @@ import android.widget.Toast;
 public class WidgetActivity extends AppCompatActivity {
 
     Button buttonAddWidget;
+    private boolean isTouch = false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -24,21 +28,44 @@ public class WidgetActivity extends AppCompatActivity {
 
         buttonAddWidget = findViewById(R.id.button_widget);
 
+
         getPermission();
 
         buttonAddWidget.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 v.setBackgroundColor(Color.RED);
-                if(!Settings.canDrawOverlays(WidgetActivity.this)){
-                        getPermission();
-                }else {
-                        Intent intent = new Intent(WidgetActivity.this,WidgetService.class);
-                        startService(intent);
+                if (!Settings.canDrawOverlays(WidgetActivity.this)) {
+                    getPermission();
+                } else {
+                    Intent intent = new Intent(WidgetActivity.this, WidgetService.class);
+                    startService(intent);
                 }
             }
         });
     }
+        @Override
+        public boolean onTouchEvent(MotionEvent event) {
+            int X = (int) event.getX();
+            int Y = (int) event.getY();
+            int eventAction = event.getAction();
+            switch (eventAction) {
+                case MotionEvent.ACTION_DOWN:
+                    Toast.makeText(this, "ACTION_DOWN "+"X: "+X+" Y: "+Y, Toast.LENGTH_SHORT).show();
+                    isTouch = true;
+                    break;
+                case MotionEvent.ACTION_MOVE:
+                    Toast.makeText(this, "MOVE "+"X: "+X+" Y: "+Y,
+                            Toast.LENGTH_SHORT).show();
+                    break;
+                case MotionEvent.ACTION_UP:
+                    Toast.makeText(this, "ACTION_UP "+"X: "+X+" Y: "+Y, Toast.LENGTH_SHORT).show();
+                    break;
+            }
+            return true;
+        }
+
+
 
     public void getPermission(){
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !Settings.canDrawOverlays(this)){
