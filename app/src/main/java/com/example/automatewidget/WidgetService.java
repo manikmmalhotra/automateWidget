@@ -12,6 +12,7 @@ import android.os.Build;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Looper;
+import android.os.SystemClock;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -44,6 +45,7 @@ public class WidgetService extends Service {
     String currentApp = "";
     String name = "";
     int height;
+    View view;
     WindowManager.LayoutParams layoutParams;
     int widht;
     int i = 0;
@@ -58,6 +60,7 @@ public class WidgetService extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
 
         //stickyFun();
+
 
 
         myTimer = new Timer();
@@ -118,6 +121,18 @@ public class WidgetService extends Service {
                                 floatingView.setVisibility(View.GONE);
                             }
                             name = "whatsapp";
+                            stickyFun();
+                        }
+                        Log.d("mnik", "" + layoutParams.toString());
+
+                    }
+                    if (currentApp.contains("drawit")) {
+                        Log.e("rohit", "Current App in foreground is: " + currentApp);
+                        if (name != "drawit") {
+                            if (floatingView != null && floatingView.getVisibility() == View.VISIBLE) {
+                                floatingView.setVisibility(View.GONE);
+                            }
+                            name = "drawit";
                             stickyFun();
                         }
                         Log.d("mnik", "" + layoutParams.toString());
@@ -217,6 +232,7 @@ public class WidgetService extends Service {
                         layoutParams.y = initialY + (int) (event.getRawY() - initialTouchY);
                         if (clickDuration < MAX_CLICk_DURATION) {
                             Toast.makeText(WidgetService.this, "TIME : " + textView.getText(), Toast.LENGTH_SHORT).show();
+                            ontouched(view);
                         } else {
                             if (layoutParams.y > (height * 0.8)) {
                                 //stopSelf();
@@ -240,6 +256,39 @@ public class WidgetService extends Service {
 
 
     }
+
+    public void ontouched(View v){
+        long downTime = SystemClock.uptimeMillis();
+        long eventTime = SystemClock.uptimeMillis() + 100;
+        float x = 200.0f;
+        float y = 200.0f;
+
+
+        // List of meta states found here:     developer.android.com/reference/android/view/KeyEvent.html#getMetaState()
+        int metaState = 0;
+        MotionEvent motionEvent1 = MotionEvent.obtain(
+                downTime,
+                eventTime,
+                MotionEvent.ACTION_DOWN,
+                x,
+                y,
+                metaState
+        );
+        MotionEvent motionEvent2 = MotionEvent.obtain(
+                downTime + 10,
+                eventTime + 10,
+                MotionEvent.ACTION_UP,
+                x,
+                y,
+                metaState
+        );
+
+// Dispatch touch event to view
+        v.dispatchTouchEvent(motionEvent1);
+        v.dispatchTouchEvent(motionEvent2);
+        Log.d("rhit","workin");
+    }
+
 
     @Override
     public void onDestroy() {
