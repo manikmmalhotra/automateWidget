@@ -38,7 +38,7 @@ public class WidgetActivity extends AppCompatActivity {
                 if (!Settings.canDrawOverlays(WidgetActivity.this)) {
                     getPermission();
                 } else {
-                    Intent intent = new Intent(WidgetActivity.this, HUD.class);
+                    Intent intent = new Intent(WidgetActivity.this, max.class);
                     startService(intent);
                 }
             }
