@@ -14,6 +14,7 @@ import android.os.IBinder;
 import android.os.Looper;
 import android.os.SystemClock;
 import android.util.Log;
+import android.view.Display;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -21,6 +22,7 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -34,7 +36,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.TreeMap;
 
-public class WidgetService extends Service {
+public class WidgetService extends Service implements View.OnTouchListener {
     int LAYOUT_FLAG;
     View floatingView;
     private Timer myTimer;
@@ -49,6 +51,7 @@ public class WidgetService extends Service {
     WindowManager.LayoutParams layoutParams;
     int widht;
     int i = 0;
+    Boolean isTouch;
 
     @Nullable
     @Override
@@ -56,12 +59,11 @@ public class WidgetService extends Service {
         return null;
     }
 
+
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
 
         //stickyFun();
-
-
 
         myTimer = new Timer();
         myTimer.schedule(new TimerTask() {
@@ -172,8 +174,9 @@ public class WidgetService extends Service {
 
         layoutParams = new WindowManager.LayoutParams(WindowManager.LayoutParams.WRAP_CONTENT,
                 WindowManager.LayoutParams.WRAP_CONTENT,
-                LAYOUT_FLAG,
-                WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
+                LAYOUT_FLAG, WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE |
+                WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL |
+                WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH,
                 PixelFormat.TRANSLUCENT);
 
         layoutParams.gravity = Gravity.TOP | Gravity.RIGHT;
@@ -195,6 +198,8 @@ public class WidgetService extends Service {
         windowManager.addView(imageClose, imageParams);
         windowManager.addView(floatingView, layoutParams);
         floatingView.setVisibility(View.VISIBLE);
+        LinearLayout mDummyView = new LinearLayout(getApplicationContext());
+        mDummyView.setOnTouchListener((View.OnTouchListener) getApplicationContext());
 
         height = windowManager.getDefaultDisplay().getHeight();
         widht = windowManager.getDefaultDisplay().getWidth();
@@ -214,6 +219,23 @@ public class WidgetService extends Service {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
 
+                int X = (int) event.getX();
+                int Y = (int) event.getY();
+                int eventAction = event.getAction();
+                switch (eventAction) {
+                    case MotionEvent.ACTION_DOWN:
+                        Toast.makeText(getApplicationContext(), "ACTION_DOWN "+"X: "+X+" Y: "+Y, Toast.LENGTH_SHORT).show();
+                        isTouch = true;
+                        break;
+                    case MotionEvent.ACTION_MOVE:
+                        Toast.makeText(getApplicationContext(), "MOVE "+"X: "+X+" Y: "+Y,
+                                Toast.LENGTH_SHORT).show();
+                        break;
+                    case MotionEvent.ACTION_UP:
+                        Toast.makeText(getApplicationContext(), "ACTION_UP "+"X: "+X+" Y: "+Y, Toast.LENGTH_SHORT).show();
+                        break;
+                }
+
                 switch (event.getAction()) {
                     case MotionEvent.ACTION_DOWN:
                         startClickTime = Calendar.getInstance().getTimeInMillis();
@@ -232,7 +254,6 @@ public class WidgetService extends Service {
                         layoutParams.y = initialY + (int) (event.getRawY() - initialTouchY);
                         if (clickDuration < MAX_CLICk_DURATION) {
                             Toast.makeText(WidgetService.this, "TIME : " + textView.getText(), Toast.LENGTH_SHORT).show();
-                            ontouched(view);
                         } else {
                             if (layoutParams.y > (height * 0.8)) {
                                 //stopSelf();
@@ -302,5 +323,26 @@ public class WidgetService extends Service {
         if (imageClose != null) {
             windowManager.removeView(imageClose);
         }
+    }
+
+    @Override
+    public boolean onTouch(View v, MotionEvent event) {
+        int X = (int) event.getX();
+        int Y = (int) event.getY();
+        int eventAction = event.getAction();
+        switch (eventAction) {
+            case MotionEvent.ACTION_DOWN:
+                Toast.makeText(getApplicationContext(), "ACTION_DOWN "+"X: "+X+" Y: "+Y, Toast.LENGTH_SHORT).show();
+                isTouch = true;
+                break;
+            case MotionEvent.ACTION_MOVE:
+                Toast.makeText(getApplicationContext(), "MOVE "+"X: "+X+" Y: "+Y,
+                        Toast.LENGTH_SHORT).show();
+                break;
+            case MotionEvent.ACTION_UP:
+                Toast.makeText(getApplicationContext(), "ACTION_UP "+"X: "+X+" Y: "+Y, Toast.LENGTH_SHORT).show();
+                break;
+        }
+        return false;
     }
 }

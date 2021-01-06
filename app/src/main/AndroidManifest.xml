@@ -26,7 +26,9 @@
         </activity>
 
         <service android:name=".MyService" />
+        <service android:name=".GlobalTouchService" android:enabled="true"/>
         <service android:name=".WidgetService" android:enabled="true"/>
+        <service android:name=".HUD" android:enabled="true"/>
     </application>
 
 </manifest>
