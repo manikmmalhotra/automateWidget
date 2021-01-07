@@ -1,21 +1,28 @@
 package com.example.automatewidget;
 
+import android.accessibilityservice.AccessibilityService;
+import android.accessibilityservice.GestureDescription;
 import android.app.Service;
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.Path;
 import android.graphics.PixelFormat;
 import android.os.IBinder;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.View.OnTouchListener;
+import android.view.accessibility.AccessibilityEvent;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
-public class max extends Service implements View.OnTouchListener {
+public class max extends Service  implements View.OnTouchListener{
     LinearLayout mButton;
+
+
     @Override
     public IBinder
     onBind(Intent intent) {
@@ -46,7 +53,10 @@ public class max extends Service implements View.OnTouchListener {
         WindowManager wm = (WindowManager) getSystemService(WINDOW_SERVICE);
         wm.addView(mButton, params);
 
+
     }
+
+
 
     @Override
     public void onDestroy() {
@@ -66,18 +76,19 @@ public class max extends Service implements View.OnTouchListener {
         int eventAction = event.getAction();
         switch (eventAction) {
             case MotionEvent.ACTION_DOWN:
-                Toast.makeText(this, "ACTION_DOWN "+"X: "+X+" Y: "+Y, Toast.LENGTH_SHORT).show();
+               Log.d("hoja", "ACTION_DOWN "+"X: "+X+" Y: "+Y);
                 boolean isTouch = true;
                 break;
             case MotionEvent.ACTION_MOVE:
                 Toast.makeText(this, "MOVE "+"X: "+X+" Y: "+Y,
                         Toast.LENGTH_SHORT).show();
+
                 break;
             case MotionEvent.ACTION_UP:
                 Toast.makeText(this, "ACTION_UP "+"X: "+X+" Y: "+Y, Toast.LENGTH_SHORT).show();
                 break;
         }
-        return false;
+        return true;
     }
 
 
